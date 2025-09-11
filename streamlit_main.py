@@ -8,11 +8,11 @@ st.title('Electric Vehicle Efficiency Comparison')
 
 
 # Add dropdown filters for year, make, market class, and drive type
-year_options = list(range(2010, datetime.now().year+1))
-year1 = st.sidebar.selectbox('Select Start Year', options=year_options, index=len(year_options)-6)
+year_options = list(range(2010, datetime.now().year+2))
+year1 = st.sidebar.selectbox('Select Start Year', options=year_options, index=len(year_options)-2)
 year2 = st.sidebar.selectbox('Select End Year', options=year_options, index=len(year_options)-1)
 
-make = st.sidebar.multiselect('Select Make', options=maker_list, default=["Hyundai", "Kia", "Chevrolet", "Volkswagen"])
+make = st.sidebar.multiselect('Select Make', options=maker_list, default=["Hyundai", "Kia"])
 mclass = st.sidebar.multiselect('Select Market Class', options=market_class_list, default=market_class_list)
 drive = st.sidebar.multiselect('Select Drive Type', options=drive_list, default=drive_list)
 
