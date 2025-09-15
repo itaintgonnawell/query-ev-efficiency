@@ -62,8 +62,11 @@ if st.sidebar.button('Get Data'):
             # Plotting
             if not df.empty:
                 st.subheader('Efficiency Comparison (km/kWh)')
-                chart_data = df[['Model', 'km/kWh']].set_index('Model')
-                st.bar_chart(chart_data)
+                
+                # create data for bar chart with Model as index and km/kWh as values and Year as color
+                chart_data = df[['Model', 'km/kWh', 'Year']]
+
+                st.bar_chart(chart_data, x='Model', y='km/kWh', color='Year', stack=False, use_container_width=True)
             else:
                 st.info("No data available for the selected filters.")
 
