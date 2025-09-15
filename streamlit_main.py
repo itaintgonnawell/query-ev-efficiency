@@ -40,6 +40,10 @@ if st.sidebar.button('Get Data'):
 
             df = pd.DataFrame(data)
 
+            # remove 'ID' column if exists
+            if 'ID' in df.columns:
+                df = df.drop(columns=['ID'])
+
             # reorder columns to have km/kWh at right after config
             cols = df.columns.tolist()
             if 'km/kWh' in cols:
