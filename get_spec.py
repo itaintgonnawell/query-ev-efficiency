@@ -1,12 +1,12 @@
 import requests
 import urllib3, urllib
 from bs4 import BeautifulSoup
+from constants import ua_string
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 def get_spec(id:int|list[int]) -> list[dict]|dict:
     data = []
-    ua_string = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36'
 
     id_str = ''
     id_len = 0

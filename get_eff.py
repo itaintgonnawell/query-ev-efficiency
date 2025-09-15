@@ -1,7 +1,7 @@
 import requests
 import urllib3, urllib
 from bs4 import BeautifulSoup
-from constants import maker_list
+from constants import maker_list, ua_string
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -17,9 +17,6 @@ def add_si_eff(data:list[dict]) -> list[dict]:
 
 
 def get_eff(year1:int=2024, year2:int=2025, make:str|list[str]='Hyundai', mclass:str|list[str]='', drive:str|list[str]='') -> list[dict]|dict:
-
-    ua_string = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36'
-
     make_str = ''
     if isinstance(make, list):
         make_str = '; '.join(make)
