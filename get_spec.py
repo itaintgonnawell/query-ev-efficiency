@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 def get_spec(id:int|list[int]) -> list[dict]|dict:
+    data = []
     ua_string = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36'
 
     id_str = ''
@@ -32,8 +33,6 @@ def get_spec(id:int|list[int]) -> list[dict]|dict:
         else:
             # Extract table rows, first level rows only
             rows = table.find_all('tr')
-
-            data = []
             for i in range(id_len):
                 # add empty dict for each id
                 data.append(dict())
@@ -49,10 +48,13 @@ def get_spec(id:int|list[int]) -> list[dict]|dict:
                     for i in range(len(headers)-1):
                         if i < id_len:
                             data[i][headers[0]] = headers[i+1]
-            return data
+    else:
+        return {"error": "Failed to retrieve specification data", "status_code": response.status_code}
+    
+    return data
 
 
-def add_spec_data(data:list[dict]) -> list[dict]:
+def add_spec_data(data:list[dict]) -> list[dict]|dict:
     id_list = []
     for car in data:
         if 'ID' in car:
@@ -63,14 +65,21 @@ def add_spec_data(data:list[dict]) -> list[dict]:
     if len(id_list) > 4:
         for i in range(0, len(id_list), 4):
             chunk = id_list[i:i+4]
-            spec_data.extend(get_spec(chunk))
+            spec_data_chunk = get_spec(chunk)
+            if isinstance(spec_data_chunk, dict) and 'error' in spec_data_chunk:
+                spec_data = spec_data_chunk
+                break
+            elif isinstance(spec_data_chunk, list):
+                spec_data.extend(spec_data_chunk)
     else:
         spec_data = get_spec(id_list)
 
     # merge spec_data into data based on ID
-    if len(spec_data) == len(data):
+    if isinstance(spec_data, list) and len(spec_data) >= len(data):
         for i, car in enumerate(data):
             car.update(spec_data[i])
+    elif isinstance(spec_data, dict) and 'error' in spec_data:
+        return spec_data
 
     return data
 

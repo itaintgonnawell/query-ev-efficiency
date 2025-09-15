@@ -16,7 +16,7 @@ def add_si_eff(data:list[dict]) -> list[dict]:
     return data
 
 
-def get_eff(year1:int=2024, year2:int=2025, make:str|list[str]='Hyundai', mclass:str|list[str]='', drive:str|list[str]=''):
+def get_eff(year1:int=2024, year2:int=2025, make:str|list[str]='Hyundai', mclass:str|list[str]='', drive:str|list[str]='') -> list[dict]|dict:
 
     ua_string = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36'
 

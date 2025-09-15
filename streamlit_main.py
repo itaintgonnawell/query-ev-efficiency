@@ -22,14 +22,22 @@ include_spec = st.sidebar.checkbox('Include Specification Data (may take longer)
 
 if st.sidebar.button('Get Data'):
     with st.spinner('Fetching data...'):
-        data = add_si_eff(get_eff(year1=year1, year2=year2, make=make, mclass=mclass, drive=drive))
-
-        if include_spec:
-            data = add_spec_data(data)
+        data = get_eff(year1=year1, year2=year2, make=make, mclass=mclass, drive=drive)
 
         if isinstance(data, dict) and 'error' in data:
             st.error(f"Error: {data['error']}")
-        else:
+        elif isinstance(data, list):
+            # add si efficiency data
+            data = add_si_eff(data)
+
+            if include_spec:
+                spec_data = add_spec_data(data)
+
+                if isinstance(spec_data, dict) and 'error' in spec_data:
+                    st.error(f"Error during get specification data: {spec_data['error']}")
+                elif isinstance(spec_data, list):
+                    data = spec_data
+
             df = pd.DataFrame(data)
 
             # reorder columns to have km/kWh at right after config
