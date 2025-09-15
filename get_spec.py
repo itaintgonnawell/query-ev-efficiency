@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-def get_spec(id:int|list[int]):
+def get_spec(id:int|list[int]) -> list[dict]|dict:
     ua_string = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36'
 
     id_str = ''
@@ -23,7 +23,10 @@ def get_spec(id:int|list[int]):
         soup = BeautifulSoup(response.content, 'html.parser')
 
         # Find the table inside the div with id 'tab4'
-        table = soup.find('div', id='tab4').find('table')
+        tab4_div = soup.find('div', id='tab4')
+        if not tab4_div:
+            return {"error": "No specification data found"}
+        table = tab4_div.find('table')
         if not table:
             return {"error": "No data table found"}
         else:
@@ -65,8 +68,9 @@ def add_spec_data(data:list[dict]) -> list[dict]:
         spec_data = get_spec(id_list)
 
     # merge spec_data into data based on ID
-    for i, car in enumerate(data):
-        car.update(spec_data[i])
+    if len(spec_data) == len(data):
+        for i, car in enumerate(data):
+            car.update(spec_data[i])
 
     return data
 
