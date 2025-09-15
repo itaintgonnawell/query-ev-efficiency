@@ -62,6 +62,7 @@ def get_eff(year1:int=2024, year2:int=2025, make:str|list[str]='Hyundai', mclass
                     datarow = dict()
                     headers = [td for td in row.find_all('td')]
                     name_split = headers[0].find('a').get_text(strip=True).split()
+                    link_split = headers[0].find('a')['href'].split('id=')
                     if len(name_split) >= 3:
                         datarow['Year'] = int(name_split[0])
                         datarow['Make'] = name_split[1]
@@ -73,6 +74,8 @@ def get_eff(year1:int=2024, year2:int=2025, make:str|list[str]='Hyundai', mclass
                             datarow['Model'] = ' '.join(name_split[2:])
                     else:
                         datarow['Model'] = headers[0]
+                    if len(link_split) >= 2:
+                        datarow['ID'] = int(link_split[1])
                     datarow['Config'] = headers[0].find('span', class_='config').get_text(strip=True)
                 elif i%3 == 1:
                     # 2nd row has a table of 3 rows and columns: 
@@ -112,5 +115,8 @@ def get_eff(year1:int=2024, year2:int=2025, make:str|list[str]='Hyundai', mclass
 if __name__ == "__main__":
     data = add_si_eff(get_eff())
 
+    from get_spec import add_spec_data
+    data = add_spec_data(data)
+
     for car in data:
-        print([car['Name'], car['km/kWh']])
+        print([car['Model'], car['Drive'], car['km/kWh']])

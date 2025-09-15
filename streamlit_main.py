@@ -1,4 +1,5 @@
 from get_eff import get_eff, add_si_eff
+from get_spec import add_spec_data
 from datetime import datetime
 from constants import maker_list, market_class_list, drive_list
 import streamlit as st
@@ -16,9 +17,16 @@ make = st.sidebar.multiselect('Select Make', options=maker_list, default=["Hyund
 mclass = st.sidebar.multiselect('Select Market Class', options=market_class_list, default=market_class_list)
 drive = st.sidebar.multiselect('Select Drive Type', options=drive_list, default=drive_list)
 
+# add checkbox to include spec data
+include_spec = st.sidebar.checkbox('Include Specification Data (may take longer)', value=False)
+
 if st.sidebar.button('Get Data'):
     with st.spinner('Fetching data...'):
         data = add_si_eff(get_eff(year1=year1, year2=year2, make=make, mclass=mclass, drive=drive))
+
+        if include_spec:
+            data = add_spec_data(data)
+
         if isinstance(data, dict) and 'error' in data:
             st.error(f"Error: {data['error']}")
         else:
